@@ -6,7 +6,7 @@ import CreateAppointmentService from '../services/CreateAppointmentService'
 class AppointmentsController {
   async create(req: Request, res: Response) {
     try {
-      const { provider, date } = req.body
+      const { provider_id, date } = req.body
 
       const parsedDate = parseISO(date)
 
@@ -14,7 +14,7 @@ class AppointmentsController {
 
       const appointment = await createAppointment.execute({
         date: parsedDate,
-        provider,
+        provider_id,
       })
 
       return res.status(201).json(appointment)
@@ -26,8 +26,6 @@ class AppointmentsController {
   async list(req: Request, res: Response) {
     try {
       const appointmentsAll = await AppointmentsRepository.find()
-
-      console.log(appointmentsAll)
 
       return res.status(200).json(appointmentsAll)
     } catch (error) {
