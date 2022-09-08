@@ -20,6 +20,9 @@ class User {
   @Column()
   password: string
 
+  @Column({ nullable: true })
+  avatar: string
+
   @CreateDateColumn()
   create_at: Date
 
@@ -28,8 +31,3 @@ class User {
 }
 
 export default User
-// parei na aula 03 criação de registros
-// com erro no banco de dados
-// {
-// 	"error": "null value in column \"provider_id\" of relation \"appointments\" violates not-null constraint"
-// }

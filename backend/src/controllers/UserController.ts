@@ -2,6 +2,8 @@ import { Request, Response } from 'express'
 import UsersRepository from '../repositories/UsersRepository'
 import CreateUserService from '../services/CreateUserService'
 
+import UpdateUserAvatarService from '../services/UpdateUserAvatarService'
+
 class UserController {
   async create(req: Request, res: Response) {
     try {
@@ -24,9 +26,26 @@ class UserController {
       const usersAll = await UsersRepository.find()
 
       return res.status(200).json(usersAll)
-    } catch (error) {
-      console.log(error)
-      return res.status(500).json({ message: 'Erro no servidor' })
+    } catch (err: any) {
+      return res.status(400).json({ error: err.message })
+    }
+  }
+
+  async avatar(req: Request, res: Response) {
+    try {
+      const updateUserAvatar = new UpdateUserAvatarService()
+
+      const user = await updateUserAvatar.execute({
+        user_id: req.user.id,
+        avatarFileName: req.file?.filename as string,
+      })
+
+      // @ts-expect-error
+      delete user.password
+
+      return res.status(200).json(user)
+    } catch (err: any) {
+      return res.status(400).json({ error: err.message })
     }
   }
 }
