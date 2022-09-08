@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { parseISO } from 'date-fns'
 import { Request, Response } from 'express'
 import AppointmentsRepository from '../repositories/AppointmentsRepository'

@@ -10,6 +10,9 @@ class UserController {
 
       const user = await createUser.execute({ name, email, password })
 
+      // @ts-expect-error
+      delete user.password
+
       return res.status(201).json(user)
     } catch (err: any) {
       return res.status(400).json({ error: err.message })

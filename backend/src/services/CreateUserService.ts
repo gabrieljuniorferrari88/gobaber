@@ -1,3 +1,5 @@
+import { hash } from 'bcryptjs'
+
 import User from '../models/User'
 import usersRepository from '../repositories/UsersRepository'
 
@@ -17,10 +19,12 @@ class CreateUserService {
       throw new Error('Email já cadastrando!')
     }
 
+    const hashedPassword = await hash(password, 8)
+
     const user = usersRepository.create({
       name,
       email,
-      password,
+      password: hashedPassword,
     })
 
     await usersRepository.save(user)
