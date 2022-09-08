@@ -28,6 +28,8 @@ class AppointmentsController {
     try {
       const appointmentsAll = await AppointmentsRepository.find()
 
+      console.log(req.user)
+
       return res.status(200).json(appointmentsAll)
     } catch (error) {
       console.log(error)
