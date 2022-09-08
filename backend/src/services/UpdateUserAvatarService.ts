@@ -7,6 +7,8 @@ import uploadConfig from '../config/upload'
 import usersRepository from '../repositories/UsersRepository'
 import User from '../models/User'
 
+import AppError from '../errors/AppError'
+
 interface Request {
   user_id: string
   avatarFileName: string
@@ -19,7 +21,10 @@ class UpdateUserAvatarService {
     })
 
     if (!user) {
-      throw new Error('Somente usuários autenticados podem mudar de avatar!')
+      throw new AppError(
+        'Somente usuários autenticados podem mudar de avatar!',
+        401,
+      )
     }
 
     if (user.avatar) {

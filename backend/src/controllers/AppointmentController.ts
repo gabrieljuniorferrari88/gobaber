@@ -6,35 +6,24 @@ import CreateAppointmentService from '../services/CreateAppointmentService'
 
 class AppointmentsController {
   async create(req: Request, res: Response) {
-    try {
-      const { provider_id, date } = req.body
+    const { provider_id, date } = req.body
 
-      const parsedDate = parseISO(date)
+    const parsedDate = parseISO(date)
 
-      const createAppointment = new CreateAppointmentService()
+    const createAppointment = new CreateAppointmentService()
 
-      const appointment = await createAppointment.execute({
-        date: parsedDate,
-        provider_id,
-      })
+    const appointment = await createAppointment.execute({
+      date: parsedDate,
+      provider_id,
+    })
 
-      return res.status(201).json(appointment)
-    } catch (err: any) {
-      return res.status(400).json({ error: err.message })
-    }
+    return res.status(201).json(appointment)
   }
 
   async list(req: Request, res: Response) {
-    try {
-      const appointmentsAll = await AppointmentsRepository.find()
+    const appointmentsAll = await AppointmentsRepository.find()
 
-      console.log(req.user)
-
-      return res.status(200).json(appointmentsAll)
-    } catch (error) {
-      console.log(error)
-      return res.status(500).json({ message: 'Erro no servidor' })
-    }
+    return res.status(200).json(appointmentsAll)
   }
 }
 
