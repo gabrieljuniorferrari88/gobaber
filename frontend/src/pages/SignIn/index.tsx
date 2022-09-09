@@ -1,8 +1,9 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useContext, useRef } from 'react'
 import { FiLogIn, FiMail, FiLock } from 'react-icons/fi'
 import { Form } from '@unform/web'
 import { FormHandles } from '@unform/core'
 
+import { AuthContext } from '../../context/AuthContext'
 import * as Yup from 'yup'
 
 import logoImg from '../../assets/logo.svg'
@@ -12,30 +13,47 @@ import getValidationErrors from '../../utils/getValidationErrors'
 
 import * as S from './styles'
 
+interface SingInFormData {
+  email: string
+  password: string
+}
+
 export function SignIn() {
   const formRef = useRef<FormHandles>(null)
 
-  const handleSubmit = useCallback(async (data: object) => {
-    try {
-      formRef.current?.setErrors({})
+  const { user, signIn } = useContext(AuthContext)
 
-      const schema = Yup.object().shape({
-        email: Yup.string()
-          .required('E-mail obrigatório!')
-          .email('Digite um e-mail válido!'),
-        password: Yup.string().required('Senha obrigatória!'),
-      })
+  console.log(user)
 
-      await schema.validate(data, {
-        abortEarly: false,
-      })
-    } catch (err: any) {
-      console.log(err)
+  const handleSubmit = useCallback(
+    async (data: SingInFormData) => {
+      try {
+        formRef.current?.setErrors({})
 
-      const errors = getValidationErrors(err)
-      formRef.current?.setErrors(errors)
-    }
-  }, [])
+        const schema = Yup.object().shape({
+          email: Yup.string()
+            .required('E-mail obrigatório!')
+            .email('Digite um e-mail válido!'),
+          password: Yup.string().required('Senha obrigatória!'),
+        })
+
+        await schema.validate(data, {
+          abortEarly: false,
+        })
+
+        signIn({
+          email: data.email,
+          password: data.password,
+        })
+      } catch (err: any) {
+        console.log(err)
+
+        const errors = getValidationErrors(err)
+        formRef.current?.setErrors(errors)
+      }
+    },
+    [signIn],
+  )
   return (
     <S.Container>
       <S.Content>

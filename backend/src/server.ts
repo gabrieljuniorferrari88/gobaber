@@ -4,6 +4,7 @@ import AppDataSource from './dataSource'
 import routes from './routes'
 import uploadConfig from './config/upload'
 import AppError from './errors/AppError'
+import cors from 'cors'
 
 AppDataSource.initialize()
   .then(() => {
@@ -11,6 +12,7 @@ AppDataSource.initialize()
 
     const app = express()
 
+    app.use(cors())
     app.use(express.json())
     app.use('/files', express.static(uploadConfig.directory))
     app.use(routes)
