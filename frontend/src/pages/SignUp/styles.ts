@@ -66,5 +66,3 @@ export const Background = styled.div`
   background: url(${SignUpBackgroundImg}) no-repeat center;
   background-size: cover;
 `
-
-// parou em 04 - isolando componentes (modulo REACTJS)
