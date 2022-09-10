@@ -4,8 +4,9 @@ import React from 'react'
 import GlobalStyle from './styles/global'
 import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
+import ToastContainer from './components/ToastContainer'
 
-import { AuthProvider } from './context/AuthContext'
+import { AuthProvider } from './hooks/AuthContext'
 
 export function App() {
   return (
@@ -15,6 +16,7 @@ export function App() {
         {/* <SignUp /> */}
         <SignIn />
       </AuthProvider>
+      <ToastContainer />
     </>
   )
 }

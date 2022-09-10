@@ -1,9 +1,9 @@
-import { useCallback, useContext, useRef } from 'react'
+import { useCallback, useRef } from 'react'
 import { FiLogIn, FiMail, FiLock } from 'react-icons/fi'
 import { Form } from '@unform/web'
 import { FormHandles } from '@unform/core'
 
-import { AuthContext } from '../../context/AuthContext'
+import { useAuth } from '../../hooks/AuthContext'
 import * as Yup from 'yup'
 
 import logoImg from '../../assets/logo.svg'
@@ -21,9 +21,7 @@ interface SingInFormData {
 export function SignIn() {
   const formRef = useRef<FormHandles>(null)
 
-  const { user, signIn } = useContext(AuthContext)
-
-  console.log(user)
+  const { signIn } = useAuth()
 
   const handleSubmit = useCallback(
     async (data: SingInFormData) => {
@@ -46,10 +44,10 @@ export function SignIn() {
           password: data.password,
         })
       } catch (err: any) {
-        console.log(err)
-
-        const errors = getValidationErrors(err)
-        formRef.current?.setErrors(errors)
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err)
+          formRef.current?.setErrors(errors)
+        }
       }
     },
     [signIn],

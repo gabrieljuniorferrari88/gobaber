@@ -8,7 +8,7 @@ import cors from 'cors'
 
 AppDataSource.initialize()
   .then(() => {
-    console.log('Banco de dado inicializado!')
+    console.log('🎲 Banco de dado inicializado!')
 
     const app = express()
 
