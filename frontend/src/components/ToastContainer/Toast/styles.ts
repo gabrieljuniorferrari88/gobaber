@@ -1,8 +1,9 @@
 import styled, { css } from 'styled-components'
+import { animated } from 'react-spring'
 
 interface ContainerProps {
   type?: 'success' | 'error' | 'info'
-  hasDescription: boolean
+  hasDescription: number
 }
 
 const toastTypeVariations = {
@@ -20,13 +21,14 @@ const toastTypeVariations = {
   `,
 }
 
-export const Container = styled.div<ContainerProps>`
+export const Container = styled(animated.div)<ContainerProps>`
   width: 360px;
 
   position: relative;
   padding: 16px 30px 16px 16px;
   border-radius: 10px;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+
   display: flex;
 
   & + div {
@@ -56,7 +58,6 @@ export const Container = styled.div<ContainerProps>`
     top: 19px;
     opacity: 0.6;
     border: 0;
-
     background: transparent;
     color: inherit;
   }
@@ -65,6 +66,7 @@ export const Container = styled.div<ContainerProps>`
     !props.hasDescription &&
     css`
       align-items: center;
+
       svg {
         margin-top: 0;
       }

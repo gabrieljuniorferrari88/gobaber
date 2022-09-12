@@ -13,6 +13,7 @@ export interface ToastMessage {
   type?: 'success' | 'error' | 'info'
   title: string
   description?: string
+  map?: string
 }
 
 interface ToastContextData {
