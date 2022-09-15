@@ -1,23 +1,28 @@
-import * as React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
-import SignIn from '../pages/SignIn'
-import SignUp from '../pages/SignUp'
+import { SignIn } from '../pages/SignIn'
+import { SignUp } from '../pages/SignUp'
+import { NavigationContainer } from '@react-navigation/native'
 
-const Auth = createNativeStackNavigator()
+export type RootStackParamList = {
+  SignIn: undefined
+  SignUp: undefined
+}
+
+const { Navigator, Screen } = createNativeStackNavigator<RootStackParamList>()
 
 export function Routes() {
   return (
-    <Auth.Navigator
-      screenOptions={{
-        headerShown: false,
-        contentStyle: { backgroundColor: '#312e38' },
-      }}
-    >
-      <Auth.Screen name="SignIn" component={SignIn} />
-      <Auth.Screen name="SignUp" component={SignUp} />
-    </Auth.Navigator>
+    <NavigationContainer>
+      <Navigator
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: '#312e38' },
+        }}
+      >
+        <Screen name="SignIn" component={SignIn} />
+        <Screen name="SignUp" component={SignUp} />
+      </Navigator>
+    </NavigationContainer>
   )
 }
-
-export default Routes

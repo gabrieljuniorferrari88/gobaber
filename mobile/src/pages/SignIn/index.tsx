@@ -1,16 +1,92 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React from 'react'
-import { Image } from 'react-native'
+import { Image, KeyboardAvoidingView, Platform, ScrollView } from 'react-native'
+import { RFValue } from 'react-native-responsive-fontsize'
+import { useNavigation } from '@react-navigation/native'
+import { useForm } from 'react-hook-form'
+import * as Yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+
+import Icon from '@expo/vector-icons/Feather'
+import { Button } from '../../components/Button'
+import { InputForm } from '../../components/InputForm'
+import logoImg from '../../assets/logo.png'
+import theme from '../../global/styles/theme'
 import * as S from './styles'
 
-import logoImg from '../../../assets/logo.png'
+const schema = Yup.object().shape({
+  email: Yup.string()
+    .required('E-mail obrigatório!')
+    .email('Digite um e-mail válido!'),
+  password: Yup.string().required('Senha obrigatória!'),
+})
 
 export function SignIn() {
+  const navigation = useNavigation()
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  })
+
+  function handleLogin(form: any) {
+    console.log(form)
+  }
+
   return (
-    <S.Container>
-      <Image source={logoImg} />
-    </S.Container>
+    <>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{ flex: 1 }}
+        enabled
+      >
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{ flex: 1 }}
+        >
+          <S.Container>
+            <Image source={logoImg} />
+
+            <S.Title>Faça seu logon</S.Title>
+
+            <InputForm
+              name="email"
+              control={control}
+              iconName="mail"
+              textContentType="emailAddress"
+              keyboardType="email-address"
+              autoCorrect={false}
+              autoCapitalize="none"
+              placeholder="E-mail"
+              error={errors.email && errors.email.message}
+            />
+
+            <InputForm
+              name="password"
+              control={control}
+              iconName="lock"
+              placeholder="Senha"
+              secureTextEntry={true}
+              error={errors.password && errors.password.message}
+              returnKeyType="send"
+              onSubmitEditing={handleSubmit(handleLogin)}
+            />
+
+            <Button title="Entrar" onPress={handleSubmit(handleLogin)} />
+
+            <S.ForgotPassword onPress={() => {}}>
+              <S.ForgotPasswordText>Esqueci minha senha</S.ForgotPasswordText>
+            </S.ForgotPassword>
+          </S.Container>
+        </ScrollView>
+      </KeyboardAvoidingView>
+
+      <S.CreateAccountButton onPress={() => navigation.navigate('SignUp')}>
+        <Icon name="log-in" size={RFValue(20)} color={theme.colors.primary} />
+        <S.CreateAccountButtonText>Criar uma conta</S.CreateAccountButtonText>
+      </S.CreateAccountButton>
+    </>
   )
 }
-
-export default SignIn

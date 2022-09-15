@@ -1,15 +1,31 @@
 import * as React from 'react'
 import { StatusBar } from 'expo-status-bar'
-// import { View } from 'react-native'
-import { NavigationContainer } from '@react-navigation/native'
 
-import AuthRoutes from './src/routes'
+import { ThemeProvider } from 'styled-components'
+
+import {
+  useFonts,
+  RobotoSlab_400Regular,
+  RobotoSlab_500Medium,
+} from '@expo-google-fonts/roboto-slab'
+
+import theme from './src/global/styles/theme'
+import { Routes } from './src/routes'
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    RobotoSlab_400Regular,
+    RobotoSlab_500Medium,
+  })
+
+  if (!fontsLoaded) {
+    return null
+  }
+
   return (
-    <NavigationContainer>
+    <ThemeProvider theme={theme}>
       <StatusBar style="light" translucent />
-      <AuthRoutes />
-    </NavigationContainer>
+      <Routes />
+    </ThemeProvider>
   )
 }
