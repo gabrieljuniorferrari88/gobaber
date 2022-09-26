@@ -9,11 +9,11 @@ import { Input } from '../Input'
 interface Props extends TextInputProps {
   control: Control
   name: string
-  iconName: keyof typeof IconProps.glyphMap
+  icon: keyof typeof IconProps.glyphMap
   error: any
 }
 
-export function InputForm({ control, name, iconName, error, ...rest }: Props) {
+export function InputForm({ control, name, icon, error, ...rest }: Props) {
   return (
     <S.Container>
       <Controller
@@ -21,7 +21,7 @@ export function InputForm({ control, name, iconName, error, ...rest }: Props) {
         render={({ field: { onChange, value } }) => (
           <Input
             name={name}
-            iconName={iconName}
+            icon={icon}
             onChangeText={onChange}
             value={value}
             {...rest}

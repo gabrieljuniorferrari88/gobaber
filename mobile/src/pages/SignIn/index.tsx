@@ -1,10 +1,18 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { Image, KeyboardAvoidingView, Platform, ScrollView } from 'react-native'
+import {
+  Alert,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from 'react-native'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { useNavigation } from '@react-navigation/native'
 import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
+import getValidationErrors from '../../utils/getValidationErrors'
+// import { api } from '../../services/api'
 
 import Icon from '@expo/vector-icons/Feather'
 import { Button } from '../../components/Button'
@@ -12,16 +20,29 @@ import { InputForm } from '../../components/InputForm'
 import logoImg from '../../assets/logo.png'
 import theme from '../../global/styles/theme'
 import * as S from './styles'
+import { useCallback } from 'react'
 
-const schema = Yup.object().shape({
-  email: Yup.string()
-    .required('E-mail obrigatório!')
-    .email('Digite um e-mail válido!'),
-  password: Yup.string().required('Senha obrigatória!'),
-})
+import { useAuth } from '../../hooks/auth'
+// import { FieldValues } from 'react-hook-form/dist/types'
+
+// export type FieldValues = Record<string, any>
+
+// interface SignInFormData extends FieldValues {
+//   email: string
+//   password: string
+// }
 
 export function SignIn() {
   const navigation = useNavigation()
+
+  const { signIn } = useAuth()
+
+  const schema = Yup.object().shape({
+    email: Yup.string()
+      .required('E-mail obrigatório!')
+      .email('Digite um e-mail válido!'),
+    password: Yup.string().required('Senha obrigatória!'),
+  })
 
   const {
     control,
@@ -31,9 +52,51 @@ export function SignIn() {
     resolver: yupResolver(schema),
   })
 
-  function handleLogin(form: any) {
-    console.log(form)
-  }
+  const handleSignIn = useCallback(
+    async (data: any) => {
+      try {
+        console.log(data)
+        await signIn({
+          email: data.email,
+          password: data.password,
+        })
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err)
+
+          console.log(errors)
+
+          // formRef.current?.setErrors(errors)
+
+          return
+        }
+
+        Alert.alert(
+          'Erro na autenticação',
+          'Ocorreu um erro ao fazer login, cheque as credenciais.',
+        )
+      }
+    },
+    [signIn],
+  )
+
+  // async function handleSignIn(data: any) {
+  //   console.log(data)
+
+  //   try {
+  //   } catch (err) {
+  //     if (err instanceof Yup.ValidationError) {
+  //       const errors = getValidationErrors(err)
+
+  //       return errors
+  //     }
+
+  //     Alert.alert(
+  //       'Erro na autenticação',
+  //       'Ocorreu um erro ao fazer login, cheque suas credenciais.',
+  //     )
+  //   }
+  // }
 
   return (
     <>
@@ -54,7 +117,7 @@ export function SignIn() {
             <InputForm
               name="email"
               control={control}
-              iconName="mail"
+              icon="mail"
               textContentType="emailAddress"
               keyboardType="email-address"
               autoCorrect={false}
@@ -66,15 +129,15 @@ export function SignIn() {
             <InputForm
               name="password"
               control={control}
-              iconName="lock"
+              icon="lock"
               placeholder="Senha"
               secureTextEntry={true}
               error={errors.password && errors.password.message}
               returnKeyType="send"
-              onSubmitEditing={handleSubmit(handleLogin)}
+              onSubmitEditing={handleSubmit(handleSignIn)}
             />
 
-            <Button title="Entrar" onPress={handleSubmit(handleLogin)} />
+            <Button title="Entrar" onPress={handleSubmit(handleSignIn)} />
 
             <S.ForgotPassword onPress={() => {}}>
               <S.ForgotPasswordText>Esqueci minha senha</S.ForgotPasswordText>

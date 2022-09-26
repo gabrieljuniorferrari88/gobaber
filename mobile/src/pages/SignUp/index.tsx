@@ -1,10 +1,17 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { Image, KeyboardAvoidingView, Platform, ScrollView } from 'react-native'
+import {
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Alert,
+} from 'react-native'
 import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as S from './styles'
 import Icon from '@expo/vector-icons/Feather'
+import { api } from '../../services/api'
 
 import { InputForm } from '../../components/InputForm'
 import { Button } from '../../components/Button'
@@ -13,6 +20,7 @@ import theme from '../../global/styles/theme'
 import logoImg from '../../assets/logo.png'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { useNavigation } from '@react-navigation/native'
+// import { useEffect } from 'react'
 
 const schema = Yup.object().shape({
   name: Yup.string().required('Nome obrigatório!'),
@@ -28,6 +36,12 @@ const schema = Yup.object().shape({
   // ),
 })
 
+// interface SingInFormData {
+//   name: string
+//   email: string
+//   password: string
+// }
+
 export function SignUp() {
   const navigation = useNavigation()
 
@@ -39,8 +53,19 @@ export function SignUp() {
     resolver: yupResolver(schema),
   })
 
-  function handleCadastrar(form: any) {
-    console.log(form)
+  async function handleCadastrar(data: any) {
+    try {
+      await api.post('/users', data)
+
+      Alert.alert(
+        'Cadastro realizado com sucesso!',
+        'Você já pode fazer login na aplicação!',
+      )
+
+      navigation.navigate('SignIn')
+    } catch (error: any) {
+      console.log(error.message)
+    }
   }
 
   return (
@@ -61,7 +86,7 @@ export function SignUp() {
             <InputForm
               name="name"
               control={control}
-              iconName="user"
+              icon="user"
               autoCapitalize="words"
               textContentType="username"
               placeholder="Nome"
@@ -70,7 +95,7 @@ export function SignUp() {
             <InputForm
               name="email"
               control={control}
-              iconName="mail"
+              icon="mail"
               textContentType="emailAddress"
               keyboardType="email-address"
               autoCorrect={false}
@@ -81,7 +106,7 @@ export function SignUp() {
             <InputForm
               name="password"
               control={control}
-              iconName="lock"
+              icon="lock"
               textContentType="newPassword"
               placeholder="Senha"
               secureTextEntry={true}

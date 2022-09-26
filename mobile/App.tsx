@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import * as React from 'react'
 import { StatusBar } from 'expo-status-bar'
 
@@ -12,6 +13,8 @@ import {
 import theme from './src/global/styles/theme'
 import { Routes } from './src/routes'
 
+import AppProvider from './src/hooks'
+
 export default function App() {
   const [fontsLoaded] = useFonts({
     RobotoSlab_400Regular,
@@ -25,7 +28,9 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <StatusBar style="light" translucent />
-      <Routes />
+      <AppProvider>
+        <Routes />
+      </AppProvider>
     </ThemeProvider>
   )
 }
