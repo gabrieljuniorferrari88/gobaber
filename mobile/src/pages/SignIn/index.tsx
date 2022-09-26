@@ -55,7 +55,7 @@ export function SignIn() {
   const handleSignIn = useCallback(
     async (data: any) => {
       try {
-        console.log(data)
+        // console.log(data)
         await signIn({
           email: data.email,
           password: data.password,
@@ -65,8 +65,6 @@ export function SignIn() {
           const errors = getValidationErrors(err)
 
           console.log(errors)
-
-          // formRef.current?.setErrors(errors)
 
           return
         }
@@ -79,24 +77,6 @@ export function SignIn() {
     },
     [signIn],
   )
-
-  // async function handleSignIn(data: any) {
-  //   console.log(data)
-
-  //   try {
-  //   } catch (err) {
-  //     if (err instanceof Yup.ValidationError) {
-  //       const errors = getValidationErrors(err)
-
-  //       return errors
-  //     }
-
-  //     Alert.alert(
-  //       'Erro na autenticação',
-  //       'Ocorreu um erro ao fazer login, cheque suas credenciais.',
-  //     )
-  //   }
-  // }
 
   return (
     <>

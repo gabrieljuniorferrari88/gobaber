@@ -26,6 +26,7 @@ interface SignInTest {
 
 interface AuthContextProps {
   user: object
+  loading: boolean
   signIn(credentials: SignInCredentials): Promise<void>
   signOut(): void
 }
@@ -38,6 +39,7 @@ const AuthContext = createContext<AuthContextProps>({} as AuthContextProps)
 
 function AuthProvider({ children }: AuthProviderProps) {
   const [data, setData] = useState<AuthState>({} as AuthState)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function loadStorageData(): Promise<void> {
@@ -49,6 +51,8 @@ function AuthProvider({ children }: AuthProviderProps) {
       if (token[1] && user[1]) {
         setData({ token: token[1], user: JSON.parse(user[1]) })
       }
+
+      setLoading(false)
     }
 
     loadStorageData()
@@ -80,7 +84,7 @@ function AuthProvider({ children }: AuthProviderProps) {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ user: data.user, signIn, signOut }}>
+    <AuthContext.Provider value={{ user: data.user, signIn, signOut, loading }}>
       {children}
     </AuthContext.Provider>
   )
